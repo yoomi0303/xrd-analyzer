@@ -230,4 +230,4 @@ if uploaded_file is not None:
             fn = "xrd_analysis_result.png"
             img = io.BytesIO()
             plt.savefig(img, format='png', bbox_inches='tight')
-            st.download_button(label="📷 그래프 이미지 다운로드", data=img, file
+            st.download_button(label="📷 그래프 이미지 다운로드", data=img, file_name=fn, mime="image/png")
