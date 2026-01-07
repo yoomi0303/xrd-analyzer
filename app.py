@@ -6,21 +6,21 @@ from scipy.signal import find_peaks
 import io
 
 # =============================================================================
-# 1. 광물 DB (업데이트됨: Quartz/SO3 추가, Friedel 수정, C-S-H 제외)
+# 1. 광물 DB (마커 오류 수정: A, B, M 등 삭제 -> 안전한 기호로 변경)
 # =============================================================================
 MINERAL_DB = {
     # --- 1. 실리카 및 황산염 ---
     "Quartz (SiO2)": { "peaks": [26.6, 20.8, 50.1], "marker": "x", "color": "purple" },
-    "Gypsum (CaSO4.2H2O)": { "peaks": [11.6, 20.7, 23.4], "marker": "1", "color": "cyan" },
-    "Bassanite (Hemihydrate)": { "peaks": [14.7, 29.7, 31.9], "marker": "B", "color": "navy" },
-    "Anhydrite (CaSO4)": { "peaks": [25.4, 38.6], "marker": "A", "color": "blue" },
+    "Gypsum (CaSO4.2H2O)": { "peaks": [11.6, 20.7, 23.4], "marker": "1", "color": "cyan" },     # marker '1': tri_down
+    "Bassanite (Hemihydrate)": { "peaks": [14.7, 29.7, 31.9], "marker": "2", "color": "navy" }, # marker '2': tri_up (B 제거)
+    "Anhydrite (CaSO4)": { "peaks": [25.4, 38.6], "marker": "3", "color": "blue" },              # marker '3': tri_left (A 제거)
 
     # --- 2. 주요 수화물 ---
     "Portlandite (CH)": { "peaks": [18.0, 34.1, 47.1], "marker": "v", "color": "blue" },
     "Ettringite (AFt)": { "peaks": [9.1, 15.8, 22.9], "marker": "*", "color": "red" },
     "Monosulfate (AFm)": { "peaks": [9.9, 11.7], "marker": "s", "color": "orange" },
     "Hemicarbonate (Hc)": { "peaks": [10.5, 10.8], "marker": "H", "color": "teal" },
-    "Monocarbonate (Mc)": { "peaks": [11.6, 11.7], "marker": "M", "color": "magenta" },
+    "Monocarbonate (Mc)": { "peaks": [11.6, 11.7], "marker": "4", "color": "magenta" }, # marker '4': tri_right (M 제거)
     
     # --- 3. 슬래그/염해 관련 ---
     "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8], "marker": "h", "color": "olive" },
@@ -32,17 +32,17 @@ MINERAL_DB = {
     "Alite (C3S)": { "peaks": [29.4, 32.2, 34.3, 41.3, 51.7], "marker": "o", "color": "black" },
     "Belite (C2S)": { "peaks": [32.1, 32.5, 34.4], "marker": "d", "color": "gray" },
     "Aluminate (C3A)": { "peaks": [33.2, 47.6], "marker": "^", "color": "brown" },
-    "Ferrite (C4AF)": { "peaks": [33.5, 47.7], "marker": "v", "color": "brown" },
+    "Ferrite (C4AF)": { "peaks": [33.5, 47.7], "marker": "<", "color": "brown" },
     "Calcite": { "peaks": [29.4, 39.4, 47.5, 48.5], "marker": "D", "color": "green" },
-    "Dolomite": { "peaks": [30.9, 41.1, 50.5], "marker": "D", "color": "lime" },
-    "Feldspar": { "peaks": [27.5, 21.0, 23.6], "marker": "4", "color": "violet" },
+    "Dolomite": { "peaks": [30.9, 41.1, 50.5], "marker": "D", "color": "lime" }, # D 중복 허용 (색깔로 구분)
+    "Feldspar": { "peaks": [27.5, 21.0, 23.6], "marker": ">", "color": "violet" },
     "Hematite (Fe2O3)": { "peaks": [33.1, 35.6, 54.0], "marker": "P", "color": "darkred" },
 }
 
 # 2. 웹 앱 설정
 st.set_page_config(page_title="Team XRD Analyzer", layout="wide")
 st.title("🧪 엑셀 파일 XRD 분석기")
-st.markdown("엑셀/TXT 파일을 업로드하면 **Top 5 성분 비율**과 **누적 그래프**를 자동으로 그려줍니다.")
+st.markdown("엑셀/TXT 파일을 업로드하면 **주요 피크(Top 2)**를 기준으로 성분을 분석하고 그래프를 그려줍니다.")
 
 # 3. 파일 업로드
 uploaded_file = st.file_uploader("파일 업로드 (.xlsx, .csv, .txt)", type=["xlsx", "xls", "csv", "txt"])
@@ -82,7 +82,7 @@ if uploaded_file is not None:
                     sample_names.append(col_name)
 
     # 샘플 선택
-    selected_samples = st.multiselect("비교 분석할 샘플을 선택하세요:", sample_names, default=sample_names[:2] if len(sample_names)>=2 else sample_names)
+    selected_samples = st.multiselect("비교 분석할 샘플 선택:", sample_names, default=sample_names[:2] if len(sample_names)>=2 else sample_names)
 
     if selected_samples:
         tolerance = st.slider("오차 범위 (Tolerance)", 0.1, 0.5, 0.3, 0.05)
@@ -96,14 +96,14 @@ if uploaded_file is not None:
             used_minerals_for_legend = {}
 
             for sample_name in selected_samples:
-                # 데이터 찾기 및 추출
+                # 데이터 찾기
                 two_theta, intensity = [], []
                 
                 # Case A: 단일 샘플
                 if len(sample_names) == 1 and sample_names[0] == uploaded_file.name:
                     x_raw = pd.to_numeric(df.iloc[:, 0], errors='coerce')
                     y_raw = pd.to_numeric(df.iloc[:, 1], errors='coerce')
-                # Case B: 다중 샘플 엑셀
+                # Case B: 다중 샘플
                 else:
                     found_col_idx = -1
                     for i in range(0, df.shape[1], 2):
@@ -114,10 +114,9 @@ if uploaded_file is not None:
                     x_raw = pd.to_numeric(df.iloc[2:, found_col_idx], errors='coerce')
                     y_raw = pd.to_numeric(df.iloc[2:, found_col_idx+1], errors='coerce')
 
-                # 유효 데이터 필터링
                 valid = x_raw.notna() & y_raw.notna()
                 two_theta = x_raw[valid].values
-                intensity = y_raw[valid].values # 그대로 사용
+                intensity = y_raw[valid].values
                 
                 if len(two_theta) == 0: continue
                 all_x.extend(two_theta)
@@ -135,7 +134,7 @@ if uploaded_file is not None:
                 stats = []
                 total_int = 0
                 
-                # [분석 로직 개선] Top 2 피크 합산 방식
+                # [분석 로직] Top 2 피크 합산
                 for m, info in MINERAL_DB.items():
                     matched_indices = [p for p in peaks if any(abs(two_theta[p]-ref) <= tolerance for ref in info['peaks'])]
                     
@@ -143,7 +142,6 @@ if uploaded_file is not None:
                         matched_intensities = [intensity[p] for p in matched_indices]
                         matched_intensities.sort(reverse=True)
                         
-                        # 상위 2개 피크의 합만 점수로 사용
                         s = sum(matched_intensities[:2])
                         
                         peaks_matched = [(two_theta[p], intensity[p]) for p in matched_indices]
