@@ -23,7 +23,7 @@ MINERAL_DB = {
 
 # 2. 웹 앱 설정
 st.set_page_config(page_title="Team XRD Analyzer", layout="wide")
-st.title("🧪 우리 팀 전용 XRD 분석기")
+st.title("🧪 엑셀 파일 XRD 분석기")
 st.markdown("엑셀 파일을 업로드하면 **Top 5 성분 비율**과 **누적 그래프**를 자동으로 그려줍니다.")
 
 # 3. 파일 업로드
