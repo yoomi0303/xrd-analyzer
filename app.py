@@ -19,6 +19,16 @@ MINERAL_DB = {
     "Quartz (SiO2)": { "peaks": [20.8, 26.6, 36.5, 39.5, 40.3, 42.4, 45.8, 50.1, 54.9, 60.0], "marker": "x", "color": "purple" },
     "Gypsum": { "peaks": [11.6, 20.7, 23.4, 29.1], "marker": "1", "color": "cyan" },
     "Calcite": { "peaks": [29.4, 39.4, 43.1, 47.5, 48.5], "marker": "D", "color": "green" },
+    # [추가] 슬래그/플라이애시 혼입 시 자주 보임
+    "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8, 34.6, 38.9, 46.4, 60.5, 61.9], "marker": "h", "color": "olive" },
+    # [추가] 고알루미나 시멘트 또는 특정 SCM 반응물
+    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "S", "color": "pink" },
+    # [추가] 염해(소금물) 피해를 입었을 때 생성 (Cl 성분)
+    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "F", "color": "navy" },
+    # [추가] 황산염 침식 (TSA) 관련 (에트링자이트와 9도 부근 겹침 주의)
+    "Thaumasite": { "peaks": [9.1, 16.0, 19.1, 22.5], "marker": "T", "color": "cyan" },
+    # [추가] C-S-H (비정질이라 피크가 뭉툭해서 잘 안 잡히지만, 29도 험프 위치 표시용)
+    "C-S-H Gel": { "peaks": [29.4, 32.0, 50.0], "marker": ".", "color": "gray" },
 }
 
 # 2. 웹 앱 설정
