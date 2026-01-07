@@ -14,14 +14,14 @@ MINERAL_DB = {
     "Hemicarbonate (Hc)": { "peaks": [10.5, 10.8, 21.3], "marker": "H", "color": "teal" },
     "Monocarbonate (Mc)": { "peaks": [11.6, 11.7, 23.5], "marker": "M", "color": "magenta" },
     
-    # --- 추가된 수화물 (Added Hydrates) ---
-    "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8, 34.6, 38.9, 46.4, 60.5, 61.9], "marker": "h", "color": "olive" },
-    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "S", "color": "pink" },
-    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "F", "color": "navy" },
-    "Thaumasite": { "peaks": [9.1, 16.0, 19.1, 22.5], "marker": "T", "color": "cyan" },
+    # --- 추가된 수화물 (유효한 마커로 변경됨) ---
+    "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8, 34.6, 38.9, 46.4, 60.5, 61.9], "marker": "h", "color": "olive" }, # h: 육각형
+    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "8", "color": "pink" },   # 8: 팔각형
+    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "p", "color": "navy" },   # p: 오각형
+    "Thaumasite": { "peaks": [9.1, 16.0, 19.1, 22.5], "marker": "+", "color": "cyan" },             # +: 플러스 기호
     "C-S-H Gel (Hump)": { "peaks": [29.4, 32.0, 50.0], "marker": ".", "color": "gray" },
 
-    # --- 클링커 및 원재료 (Clinker & Raw Materials) ---
+    # --- 클링커 및 원재료 ---
     "Alite (C3S)": { "peaks": [29.4, 32.2, 32.6, 34.3, 41.3, 51.7], "marker": "o", "color": "black" },
     "Belite (C2S)": { "peaks": [32.1, 32.5, 34.4, 38.7, 41.2], "marker": "d", "color": "gray" },
     "Aluminate (C3A)": { "peaks": [33.2, 47.6, 59.3], "marker": "^", "color": "brown" },
@@ -30,10 +30,10 @@ MINERAL_DB = {
     "Gypsum": { "peaks": [11.6, 20.7, 23.4, 29.1], "marker": "1", "color": "cyan" },
     "Calcite": { "peaks": [29.4, 39.4, 43.1, 47.5, 48.5], "marker": "D", "color": "green" },
     "Dolomite": { "peaks": [30.9, 41.1, 50.5, 51.1], "marker": "D", "color": "lime" },
-    "Feldspar": { "peaks": [27.5, 21.0, 23.6, 25.6], "marker": "f", "color": "violet" },
-    "Hematite (Fe2O3)": { "peaks": [33.1, 35.6, 24.1, 40.8, 49.4, 54.0], "marker": "o", "color": "darkred" },
-
+    "Feldspar": { "peaks": [27.5, 21.0, 23.6, 25.6], "marker": "4", "color": "violet" }, # 4: 오른쪽 삼각형
+    "Hematite (Fe2O3)": { "peaks": [33.1, 35.6, 24.1, 40.8, 49.4, 54.0], "marker": "P", "color": "darkred" }, # P: 굵은 플러스
 }
+
 
 # 2. 웹 앱 설정
 st.set_page_config(page_title="Team XRD Analyzer", layout="wide")
