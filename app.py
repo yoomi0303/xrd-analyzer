@@ -6,11 +6,11 @@ from scipy.signal import find_peaks
 import io
 
 # =============================================================================
-# 1. 광물 DB (사용자 요청 반영: SiO2, SO3/SO4 추가, C-S-H 제외)
+# 1. 광물 DB (Quartz, SO3/SO4 추가, C-S-H 제외, Friedel 수정)
 # =============================================================================
 MINERAL_DB = {
-    # --- 1. 실리카 및 황산염 (요청하신 SiO2, SO3, SO4 관련) ---
-    # SiO2 (Quartz): 26.6도가 압도적인 메인 (Fly Ash, 모래 등에서 검출)
+    # --- 1. 실리카 및 황산염 (요청하신 Quartz, SO3, SO4 관련) ---
+    # Quartz (SiO2): 26.6도가 압도적인 메인
     "Quartz (SiO2)": { "peaks": [26.6, 20.8, 50.1], "marker": "x", "color": "purple" },
 
     # 황산염 (SO3/SO4 관련 - 칼슘과 결합한 형태)
@@ -28,7 +28,7 @@ MINERAL_DB = {
     # --- 3. 슬래그/염해 관련 수화물 ---
     "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8], "marker": "h", "color": "olive" },
     "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3], "marker": "8", "color": "pink" },
-    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5], "marker": "p", "color": "navy" }, # 11.2도 메인 수정완료
+    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5], "marker": "p", "color": "navy" }, 
     "Thaumasite": { "peaks": [9.1, 16.0], "marker": "+", "color": "cyan" },
     
     # [주의] C-S-H Gel은 29.4도 Calcite/C3S와 겹쳐 오해석 소지가 커서 제외함
@@ -47,8 +47,8 @@ MINERAL_DB = {
 
 # 2. 웹 앱 설정
 st.set_page_config(page_title="Team XRD Analyzer", layout="wide")
-st.title("🧪 XRD 성분 분석기 (Quartz & SO3 추가)")
-st.markdown("엑셀/TXT 파일을 업로드하면 **주요 피크(Top 2)**를 기준으로 성분을 분석하고 **cps 단위**로 그래프를 그립니다.")
+st.title("🧪 엑셀 파일 XRD 분석기")
+st.markdown("엑셀/TXT 파일을 업로드하면 **주요 피크(Top 2)**를 기준으로 성분을 분석하고 그래프를 그려줍니다.")
 
 # 3. 파일 업로드
 uploaded_file = st.file_uploader("파일 업로드 (.xlsx, .csv, .txt)", type=["xlsx", "xls", "csv", "txt"])
@@ -58,7 +58,7 @@ if uploaded_file is not None:
     try:
         # 파일 확장자에 따른 읽기 방식 분기
         if uploaded_file.name.lower().endswith(('.csv', '.txt')):
-            # txt/csv는 구분자를 자동 감지(sep=None)하여 읽기
+            # txt나 csv는 구분자를 자동 감지(sep=None)하여 읽기
             df = pd.read_csv(uploaded_file, sep=None, engine='python', header=None)
         else:
             # 엑셀 파일 읽기
@@ -98,12 +98,8 @@ if uploaded_file is not None:
     selected_samples = st.multiselect("비교 분석할 샘플 선택:", sample_names, default=sample_names[:2] if len(sample_names)>=2 else sample_names)
 
     if selected_samples:
-        col1, col2 = st.columns(2)
-        with col1:
-            tolerance = st.slider("오차 범위 (Tolerance)", 0.1, 0.5, 0.3, 0.05)
-        with col2:
-            step_time = st.number_input("Step Time (초 단위)", min_value=0.01, value=1.0, step=0.1, help="Counts를 cps로 변환하기 위한 측정 시간 (기본 1.0 = 변환 안 함)")
-
+        tolerance = st.slider("오차 범위 (Tolerance)", 0.1, 0.5, 0.3, 0.05)
+        
         if st.button("분석 실행 🚀"):
             # 그래프 생성 (화면에 적절한 크기)
             fig, ax = plt.subplots(figsize=(10, 5 + len(selected_samples) * 1.5))
@@ -134,9 +130,7 @@ if uploaded_file is not None:
                 # 유효 데이터 필터링
                 valid = x_raw.notna() & y_raw.notna()
                 two_theta = x_raw[valid].values
-                
-                # [중요] Counts -> cps 변환
-                intensity = y_raw[valid].values / step_time
+                intensity = y_raw[valid].values # [수정됨] 그대로 사용 (cps 변환 없음)
                 
                 if len(two_theta) == 0: continue
                 all_x.extend(two_theta)
@@ -209,7 +203,7 @@ if uploaded_file is not None:
 
             # 스타일링
             ax.set_xlabel('2-Theta (deg)', fontsize=12, fontweight='bold')
-            ax.set_ylabel('Intensity (cps)', fontsize=12, fontweight='bold') # 단위 cps 표시
+            ax.set_ylabel('Intensity (a.u.)', fontsize=12, fontweight='bold') # 단위 변경
             ax.set_yticks([])
             if all_x: ax.set_xlim(min(all_x), max(all_x))
             
