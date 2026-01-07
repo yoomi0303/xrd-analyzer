@@ -29,7 +29,7 @@ MINERAL_DB = {
     "Thaumasite": { "peaks": [9.1, 16.0], "marker": "+", "color": "cyan" },
     
     # --- 4. 클링커 및 원재료 ---
-    "Alite (C3S)": { "peaks": [29.4, 32.2, 34.3, 41.3, 51.7], "marker": "o", "color": "black" },
+    "Alite (C3S)": { "peaks": [29.4, 32.2, 34.3, 51.7], "marker": "o", "color": "black" },
     "Belite (C2S)": { "peaks": [32.1, 32.5, 34.4], "marker": "d", "color": "gray" },
     "Aluminate (C3A)": { "peaks": [33.2, 47.6], "marker": "^", "color": "brown" },
     "Ferrite (C4AF)": { "peaks": [33.5, 47.7], "marker": "<", "color": "brown" },
