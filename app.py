@@ -7,11 +7,21 @@ import io
 
 # 1. 광물 DB 설정
 MINERAL_DB = {
+    # --- 주요 수화물 (Main Hydrates) ---
     "Portlandite (CH)": { "peaks": [18.0, 34.1, 47.1, 50.8], "marker": "v", "color": "blue" },
     "Ettringite (AFt)": { "peaks": [9.1, 15.8, 22.9, 35.0], "marker": "*", "color": "red" },
     "Monosulfate (AFm)": { "peaks": [9.9, 11.7, 22.7], "marker": "s", "color": "orange" },
     "Hemicarbonate (Hc)": { "peaks": [10.5, 10.8, 21.3], "marker": "H", "color": "teal" },
     "Monocarbonate (Mc)": { "peaks": [11.6, 11.7, 23.5], "marker": "M", "color": "magenta" },
+    
+    # --- 추가된 수화물 (Added Hydrates) ---
+    "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8, 34.6, 38.9, 46.4, 60.5, 61.9], "marker": "h", "color": "olive" },
+    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "S", "color": "pink" },
+    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "F", "color": "navy" },
+    "Thaumasite": { "peaks": [9.1, 16.0, 19.1, 22.5], "marker": "T", "color": "cyan" },
+    "C-S-H Gel (Hump)": { "peaks": [29.4, 32.0, 50.0], "marker": ".", "color": "gray" },
+
+    # --- 클링커 및 원재료 (Clinker & Raw Materials) ---
     "Alite (C3S)": { "peaks": [29.4, 32.2, 32.6, 34.3, 41.3, 51.7], "marker": "o", "color": "black" },
     "Belite (C2S)": { "peaks": [32.1, 32.5, 34.4, 38.7, 41.2], "marker": "d", "color": "gray" },
     "Aluminate (C3A)": { "peaks": [33.2, 47.6, 59.3], "marker": "^", "color": "brown" },
@@ -19,6 +29,9 @@ MINERAL_DB = {
     "Quartz (SiO2)": { "peaks": [20.8, 26.6, 36.5, 39.5, 40.3, 42.4, 45.8, 50.1, 54.9, 60.0], "marker": "x", "color": "purple" },
     "Gypsum": { "peaks": [11.6, 20.7, 23.4, 29.1], "marker": "1", "color": "cyan" },
     "Calcite": { "peaks": [29.4, 39.4, 43.1, 47.5, 48.5], "marker": "D", "color": "green" },
+    "Dolomite": { "peaks": [30.9, 41.1, 50.5, 51.1], "marker": "D", "color": "lime" },
+    "Feldspar": { "peaks": [27.5, 21.0, 23.6, 25.6], "marker": "f", "color": "violet" },
+    "Hematite (Fe2O3)": { "peaks": [33.1, 35.6, 24.1, 40.8, 49.4, 54.0], "marker": "o", "color": "darkred" },
 
 }
 
