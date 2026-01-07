@@ -16,8 +16,8 @@ MINERAL_DB = {
     
     # --- 추가된 수화물 (유효한 마커로 변경됨) ---
     "Hydrotalcite (Ht)": { "peaks": [11.3, 22.8, 34.6, 38.9, 46.4, 60.5, 61.9], "marker": "h", "color": "olive" }, # h: 육각형
-    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "8", "color": "pink" },   # 8: 팔각형
-    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "p", "color": "navy" },   # p: 오각형
+    "Stratlingite (C2ASH8)": { "peaks": [7.2, 14.3, 21.5, 28.7], "marker": "8", "color": "pink" },    # 8: 팔각형
+    "Friedel's Salt (Fs)": { "peaks": [11.2, 22.5, 33.9, 39.5, 47.1], "marker": "p", "color": "navy" },    # p: 오각형
     "Thaumasite": { "peaks": [9.1, 16.0, 19.1, 22.5], "marker": "+", "color": "cyan" },             # +: 플러스 기호
     "C-S-H Gel (Hump)": { "peaks": [29.4, 32.0, 50.0], "marker": ".", "color": "gray" },
 
@@ -71,8 +71,10 @@ if uploaded_file is not None:
         tolerance = st.slider("오차 범위 (Tolerance)", 0.1, 0.5, 0.3, 0.05)
         
         if st.button("분석 실행 🚀"):
-            # 그래프 생성
-            fig, ax = plt.subplots(figsize=(14, 10 + len(selected_samples)))
+            # ---------------------------------------------------------
+            # [수정됨] 그래프 크기 축소 (가로 14->10, 세로 10->5)
+            # ---------------------------------------------------------
+            fig, ax = plt.subplots(figsize=(10, 5 + len(selected_samples) * 1.5))
             
             current_offset = 0
             all_x = []
@@ -105,7 +107,7 @@ if uploaded_file is not None:
                 
                 # [샘플 이름] -> 그래프 오른쪽 끝
                 ax.text(two_theta[-1] + 1, y_shifted[-1], f" {sample_name}", 
-                        fontweight='bold', fontsize=12, va='center', ha='left')
+                        fontweight='bold', fontsize=10, va='center', ha='left')
 
                 # 피크 찾기 및 분석
                 peaks, _ = find_peaks(intensity, height=max_int*0.03, distance=10)
@@ -129,7 +131,7 @@ if uploaded_file is not None:
                     # 마커 찍기 (Top 3 피크만)
                     item['peaks'].sort(key=lambda x:x[1], reverse=True)
                     for px, py in item['peaks'][:3]:
-                        ax.scatter(px, py+current_offset+max_int*0.03, marker=item['info']['marker'], color=item['info']['color'], s=60, zorder=5, edgecolors='black', linewidth=0.5)
+                        ax.scatter(px, py+current_offset+max_int*0.03, marker=item['info']['marker'], color=item['info']['color'], s=40, zorder=5, edgecolors='black', linewidth=0.5)
                     
                     # 범례용 수집
                     if item['name'] not in used_minerals_for_legend:
@@ -143,14 +145,14 @@ if uploaded_file is not None:
                 # [비율 박스] -> 그래프 내부 우상단
                 full_label = "\n".join(lines)
                 ax.text(max(two_theta)-1, current_offset+max_int, full_label, 
-                        ha='right', va='top', fontsize=10, 
+                        ha='right', va='top', fontsize=8, 
                         bbox=dict(facecolor='white', alpha=0.7, edgecolor='gray', boxstyle='round,pad=0.3'))
 
                 current_offset += (max_int + max_int*0.4)
 
             # 스타일링
-            ax.set_xlabel('2-Theta (deg)', fontsize=14, fontweight='bold')
-            ax.set_ylabel('Intensity (Stacked)', fontsize=14, fontweight='bold')
+            ax.set_xlabel('2-Theta (deg)', fontsize=12, fontweight='bold')
+            ax.set_ylabel('Intensity (Stacked)', fontsize=12, fontweight='bold')
             ax.set_yticks([])
             if all_x: ax.set_xlim(min(all_x), max(all_x))
             
@@ -158,12 +160,12 @@ if uploaded_file is not None:
             handles, labels = [], []
             for m in sorted(used_minerals_for_legend.keys()):
                 info = used_minerals_for_legend[m]
-                h = ax.scatter([],[], marker=info['marker'], color=info['color'], s=60, edgecolors='black', linewidth=0.5)
+                h = ax.scatter([],[], marker=info['marker'], color=info['color'], s=40, edgecolors='black', linewidth=0.5)
                 handles.append(h)
                 labels.append(m)
             
             if handles:
-                ax.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc='upper left', title="Identified Phases", fontsize=11)
+                ax.legend(handles, labels, bbox_to_anchor=(1.05, 1), loc='upper left', title="Identified Phases", fontsize=10)
 
             st.pyplot(fig)
 
